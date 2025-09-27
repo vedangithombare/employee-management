@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100dvw;
+  height: 100dvh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
