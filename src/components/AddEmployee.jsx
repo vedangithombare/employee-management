@@ -1,0 +1,118 @@
+import { useContext, useState } from "react";
+import EmployeeContext from "./Context/EmployeeContext";
+import validateFormData from "./utils/formValidation";
+
+function AddEmployee() {
+  const { setEmployeeData, setToggleBtn, toggleBtn } =
+    useContext(EmployeeContext);
+  const [employeeName, setEmployeeName] = useState("");
+  const [employeeEmail, setEmployeeEmail] = useState("");
+  const [err, setErr] = useState({});
+
+  // Validate Employee form data
+  const handleFormValidation = () => {
+    const errors = validateFormData(employeeName, employeeEmail);
+    if (Object.keys(errors).length !== 0) {
+      setErr(errors);
+      return false;
+    }
+    setErr({});
+    return true;
+  };
+
+  const handleSubmit = () => {
+    const isValid = handleFormValidation();
+    if (isValid) {
+      setEmployeeData({ name: employeeName, email: employeeEmail });
+      setEmployeeName("");
+      setEmployeeEmail("");
+    }
+  };
+
+  const handleOnChange = (setter, errorKey) => (e) => {
+    setter(e.target.value);
+    setErr((prev) => ({ ...prev, [errorKey]: "" }));
+  };
+  const handleToggleBtn = () => {
+    setToggleBtn(!toggleBtn);
+  };
+
+  return (
+    <>
+      {toggleBtn && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div
+            className="flex flex-col w-full h-full  gap-15 bg-white 
+             xl:w-[45rem] xl:h-[30rem] xl:rounded-xl p-4"
+          >
+            <button
+              onClick={handleToggleBtn}
+              className="flex flex-row-reverse cursor-pointer"
+            >
+              x
+            </button>
+
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="flex flex-col gap-6"
+            >
+              <div className="flex flex-col h-full w-full gap-1">
+                <label
+                  className="flex flex-col text-sm  flex-row items-center justify-between"
+                  htmlFor="name"
+                >
+                  NAME
+                  {err.nameError && (
+                    <div className="flex text-red-500 font-bold px-6 py-2 w-fit flex-row">
+                      {err.nameError}
+                    </div>
+                  )}
+                </label>
+                <input
+                  value={employeeName}
+                  className="border-[1px] solid border-[#cecccc] p-[0.6rem] rounded-sm outline-none"
+                  onChange={handleOnChange(setEmployeeName, "nameError")}
+                  type="text"
+                  name="name"
+                  placeholder="e.g. Stephen King"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col h-full w-full gap-1">
+                <label
+                  className="flex flex-col text-sm  flex-row items-center justify-between"
+                  htmlFor="name"
+                >
+                  EMAIL
+                  {err.emailError && (
+                    <div className="flex text-red-500 font-bold px-6 py-2 w-fit  flex-row">
+                      {err.emailError}
+                    </div>
+                  )}
+                </label>
+                <input
+                  value={employeeEmail}
+                  className="border-[1px] solid border-[#cecccc] p-[0.6rem] rounded-sm outline-none"
+                  onChange={handleOnChange(setEmployeeEmail, "emailError")}
+                  type="email"
+                  name="email"
+                  placeholder="e.g. stephenking@lorem.com"
+                  required
+                />
+              </div>
+            </form>
+
+            <button
+              onClick={handleSubmit}
+              className="self-end py-4 px-8 rounded-md text-white font-semibold cursor-pointer bg-blue-400"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+export default AddEmployee;
