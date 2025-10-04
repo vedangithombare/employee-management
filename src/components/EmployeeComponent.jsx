@@ -4,12 +4,8 @@ import Header from "./Header";
 import { deleteEmployee } from "./apis/employeeApi";
 
 function EmployeeComponent() {
-  const {
-    employees,
-    setEmployees,
-    setToggleBtn,
-    setEditEmployee,
-  } = useContext(EmployeeContext);
+  const { employees, setEmployees, setToggleBtn, setEditEmployee } =
+    useContext(EmployeeContext);
 
   const handleDelete = async (id) => {
     try {
@@ -20,6 +16,8 @@ function EmployeeComponent() {
     }
   };
 
+  console.log("employees", employees);
+
   return (
     <>
       <div
@@ -27,65 +25,90 @@ function EmployeeComponent() {
              xl:w-[75rem] xl:h-[40rem] bg-[#fdf9f9] xl:rounded-xl`}
       >
         <Header />
-        <div className={` flex flex-1 flex-col p-2  `}>
+        <div className={` flex flex-1 flex-col px-8 p-2   `}>
           <div className={`overflow-x-auto`}>
-            <div className="max-h-[34rem] overflow-y-auto">
-              <table className=" w-full md:min-w-[70rem]">
+            <div className="max-h-[34rem] overflow-y-auto ">
+              <table className=" w-full md:min-w-[70rem] ">
                 {/* Table Header */}
-                <thead className=" bg-gray-200 sticky top-0 z-10">
-                  <tr className="border-b border-b-[#dae0e8]">
-                    <th className="w-[10%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
-                      EMPLOYEE ID
+                <thead className=" bg-[#ebebeb] rounded-md  sticky top-0 z-10">
+                  <tr className=" ">
+                    <th className="w-[10%] px-4 py-3 text-center text-[#c1b6b6] text-[0.8rem] font-semibold">
+                      ID
                     </th>
-                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-[0.8rem]  font-semibold">
                       NAME
                     </th>
-                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-[0.8rem]  font-semibold">
                       EMAIL
                     </th>
-                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-[0.8rem]  font-semibold">
                       POSITION
                     </th>
-                    <th className="w-[20%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                    <th className="w-[20%] px-4 py-3 text-center text-[#c1b6b6] text-[0.8rem] font-semibold">
                       ACTION
                     </th>
                   </tr>
                 </thead>
 
                 {/* Table Body */}
-                <tbody>
-                  {employees.map((emp) => {
-                    return (
-                      <tr id={emp.id} className="border-b border-b-[#dae0e8]">
-                        <td className="px-6 py-3 text-center">{emp.id}</td>
-                        <td className="px-6 py-3 text-center">{emp.name}</td>
-                        <td className="px-6 py-3 text-center">{emp.email}</td>
-                        <td className="px-6 py-3 text-center">
-                          {emp.position}
-                        </td>
-                        <td className="px-6 py-3 text-center">
-                          <div className="flex gap-2 justify-center">
-                            <span
-                              onClick={() => {
-                                setToggleBtn(true);
-                                setEditEmployee(emp);
-                              }}
-                              className=" cursor-pointer "
-                            >
-                              edit
-                            </span>
-                            <span
-                              onClick={() => handleDelete(emp.id)}
-                              className=" cursor-pointer "
-                            >
-                              delete
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
+                {employees.length === 0 ? (
+                  <tbody>
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="text-center py-4 font-medium text-sm text-gray-600"
+                      >
+                        Oops!! No Employees added, please add employee details
+                      </td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {employees.map((emp) => {
+                      return (
+                        <tr id={emp.id} className="border-b border-b-[#dae0e8]">
+                          <td className="px-6 py-3 text-sm text-center">
+                            {emp.id}
+                          </td>
+                          <td className="px-6 py-3 text-sm text-center">
+                            {emp.name}
+                          </td>
+                          <td className="px-6 py-3 text-sm text-center">
+                            {emp.email}
+                          </td>
+                          <td className="px-6 py-3 text-sm text-center">
+                            {emp.position}
+                          </td>
+                          <td className="px-6 py-3 text-center">
+                            <div className="flex gap-4 text-sm justify-center">
+                              <span
+                                onClick={() => {
+                                  setToggleBtn(true);
+                                  setEditEmployee(emp);
+                                }}
+                                className=" w-4 h-4 cursor-pointer "
+                              >
+                                <img
+                                  src="/assets/edit-text.png"
+                                  alt="edit image"
+                                />
+                              </span>
+                              <span
+                                onClick={() => handleDelete(emp.id)}
+                                className=" w-4 h-4 cursor-pointer "
+                              >
+                                <img
+                                  src="/assets/trash.png"
+                                  alt="delete image"
+                                />
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                )}
               </table>
             </div>
           </div>

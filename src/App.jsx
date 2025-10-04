@@ -11,11 +11,9 @@ function App() {
     position: "",
   });
   const [employees, setEmployees] = useState([]);
-  const [editEmployee, setEditEmployee] = useState({});
+  const [editEmployee, setEditEmployee] = useState(null);
   const [toggleBtn, setToggleBtn] = useState(false);
 
-  console.log("employeedata", employeeData);
-  console.log("toggle button", toggleBtn);
 
   // Fetching all the employee data
   useEffect(() => {
@@ -24,7 +22,6 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
-  console.log("employeesss", employees);
 
   return (
     <>

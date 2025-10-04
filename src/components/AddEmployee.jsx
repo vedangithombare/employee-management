@@ -45,7 +45,6 @@ function AddEmployee() {
     setToggleBtn(!toggleBtn);
   };
 
-
   // Editing employee data
   useEffect(() => {
     if (editEmployee) {
@@ -56,10 +55,12 @@ function AddEmployee() {
   }, [editEmployee]);
 
   const handleSubmit = async () => {
+    console.log("editemployee", editEmployee);
     const isValid = handleFormValidation();
     if (!isValid) return;
 
     if (editEmployee) {
+      console.log("in editemployee");
       const result = await editEmployeeData(editEmployee.id, {
         name: employeeName,
         email: employeeEmail,
@@ -71,6 +72,7 @@ function AddEmployee() {
       );
       setEditEmployee(null);
     } else {
+      console.log("handle add");
       await handleAdd({
         name: employeeName,
         email: employeeEmail,
@@ -89,36 +91,36 @@ function AddEmployee() {
       {toggleBtn && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
           <div
-            className="flex flex-col w-full h-full  gap-15 bg-white 
-             xl:w-[45rem] xl:h-[30rem] xl:rounded-xl p-4"
+            className="flex flex-col w-full h-full relative gap-10  bg-white 
+             xl:w-[45rem] xl:h-fit xl:p-8 xl:py-12 xl:rounded-xl p-8"
           >
             <button
               onClick={handleToggleBtn}
-              className="flex flex-row-reverse cursor-pointer"
+              className="flex w-4 h-4  absolute top-6 right-6 self-end cursor-pointer"
             >
-              x
+              <img src="/assets/close.png" alt="close button" />
             </button>
 
             {/* add Employee Form */}
             <form
               onSubmit={(e) => e.preventDefault()}
-              className="flex flex-col gap-6"
+              className="flex flex-col gap-6 p-2"
             >
               <div className="flex flex-col h-full w-full gap-1">
                 <label
-                  className="flex flex-col text-sm  flex-row items-center justify-between"
+                  className="flex flex-col text-xs  flex-row items-center justify-between"
                   htmlFor="name"
                 >
                   NAME
                   {err.nameError && (
-                    <div className="flex text-red-500 font-bold px-6 py-2 w-fit flex-row">
+                    <div className="flex text-red-500 font-bold px-6 w-fit flex-row">
                       {err.nameError}
                     </div>
                   )}
                 </label>
                 <input
                   value={employeeName}
-                  className="border-[1px] solid border-[#cecccc] p-[0.6rem] rounded-sm outline-none"
+                  className="border-[1px] solid border-[#cecccc] text-xs p-[0.6rem] rounded-sm outline-none"
                   onChange={handleOnChange(setEmployeeName, "nameError")}
                   type="text"
                   name="name"
@@ -129,19 +131,19 @@ function AddEmployee() {
 
               <div className="flex flex-col h-full w-full gap-1">
                 <label
-                  className="flex flex-col text-sm  flex-row items-center justify-between"
+                  className="flex flex-col text-xs  flex-row items-center justify-between"
                   htmlFor="name"
                 >
                   EMAIL
                   {err.emailError && (
-                    <div className="flex text-red-500 font-bold px-6 py-2 w-fit  flex-row">
+                    <div className="flex text-red-500 font-bold px-6  w-fit  flex-row">
                       {err.emailError}
                     </div>
                   )}
                 </label>
                 <input
                   value={employeeEmail}
-                  className="border-[1px] solid border-[#cecccc] p-[0.6rem] rounded-sm outline-none"
+                  className="border-[1px] solid border-[#cecccc] text-xs p-[0.6rem] rounded-sm outline-none"
                   onChange={handleOnChange(setEmployeeEmail, "emailError")}
                   type="email"
                   name="email"
@@ -152,19 +154,19 @@ function AddEmployee() {
 
               <div className="flex flex-col h-full w-full gap-1">
                 <label
-                  className="flex flex-col text-sm  flex-row items-center justify-between"
+                  className="flex flex-col text-xs flex-row items-center justify-between"
                   htmlFor="name"
                 >
                   POSITION
                   {err.positionError && (
-                    <div className="flex text-red-500 font-bold px-6 py-2 w-fit  flex-row">
+                    <div className="flex text-red-500 font-bold px-6 w-fit  flex-row">
                       {err.positionError}
                     </div>
                   )}
                 </label>
                 <input
                   value={employeePosition}
-                  className="border-[1px] solid border-[#cecccc] p-[0.6rem] rounded-sm outline-none"
+                  className="border-[1px] solid border-[#cecccc] p-[0.6rem] text-xs rounded-sm outline-none"
                   onChange={handleOnChange(
                     setEmployeePosition,
                     "positionError"
@@ -180,7 +182,7 @@ function AddEmployee() {
             {/* Submit button */}
             <button
               onClick={handleSubmit}
-              className="self-end py-4 px-8 rounded-md text-white font-semibold cursor-pointer bg-blue-400"
+              className="self-end py-3 px-8  text-xs rounded-md text-white font-semibold cursor-pointer bg-blue-400"
             >
               Submit
             </button>
