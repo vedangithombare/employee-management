@@ -16,7 +16,6 @@ function EmployeeComponent() {
     }
   };
 
-  console.log("employees", employees);
 
   return (
     <>

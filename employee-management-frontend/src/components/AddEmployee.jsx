@@ -55,12 +55,10 @@ function AddEmployee() {
   }, [editEmployee]);
 
   const handleSubmit = async () => {
-    console.log("editemployee", editEmployee);
     const isValid = handleFormValidation();
     if (!isValid) return;
 
     if (editEmployee) {
-      console.log("in editemployee");
       const result = await editEmployeeData(editEmployee.id, {
         name: employeeName,
         email: employeeEmail,
@@ -72,7 +70,6 @@ function AddEmployee() {
       );
       setEditEmployee(null);
     } else {
-      console.log("handle add");
       await handleAdd({
         name: employeeName,
         email: employeeEmail,
