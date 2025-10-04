@@ -4,7 +4,7 @@ const validateMail = (userEmail) => {
   return emailRegex.test(userEmail);
 };
 
-const validateFormData = (employeeName, employeeEmail) => {
+const validateFormData = (employeeName, employeeEmail, employeePosition) => {
   const errObj = {};
 
   if (!employeeName.trim()) {
@@ -17,6 +17,9 @@ const validateFormData = (employeeName, employeeEmail) => {
     errObj.emailError = "Invalid mail";
   }
 
+  if (!employeePosition.trim()) {
+    errObj.positionError = "This field is required";
+  }
   return errObj;
 };
 

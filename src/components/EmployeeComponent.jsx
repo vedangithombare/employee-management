@@ -1,6 +1,24 @@
+import { useContext } from "react";
+import EmployeeContext from "./Context/EmployeeContext";
 import Header from "./Header";
+import { deleteEmployee } from "./apis/employeeApi";
 
 function EmployeeComponent() {
+  const {
+    employees,
+    setEmployees,
+    setToggleBtn,
+    setEditEmployee,
+  } = useContext(EmployeeContext);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteEmployee(id);
+      setEmployees((prev) => prev.filter((employee) => employee.id !== id));
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
 
   return (
     <>
@@ -9,25 +27,67 @@ function EmployeeComponent() {
              xl:w-[75rem] xl:h-[40rem] bg-[#fdf9f9] xl:rounded-xl`}
       >
         <Header />
-        {/* scrolling here */}
         <div className={` flex flex-1 flex-col p-2  `}>
           <div className={`overflow-x-auto`}>
-            <table className=" w-full min-w-[70rem] bg-red-400 ">
-              <thead className="  ">
-                <tr className={`border-b border-b-[#dae0e8] `}>
-                  <th className="text-[#c1b6b6] text-sm font-semibold">
-                    EMPLOYEE ID
-                  </th>
-                  <th className="text-[#c1b6b6] text-sm font-semibold">NAME</th>
-                  <th className="text-[#c1b6b6] text-sm font-semibold">
-                    EMAIL
-                  </th>
-                  <th className="text-[#c1b6b6] text-sm font-semibold">
-                    ACTION
-                  </th>
-                </tr>
-              </thead>
-            </table>
+            <div className="max-h-[34rem] overflow-y-auto">
+              <table className=" w-full md:min-w-[70rem]">
+                {/* Table Header */}
+                <thead className=" bg-gray-200 sticky top-0 z-10">
+                  <tr className="border-b border-b-[#dae0e8]">
+                    <th className="w-[10%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                      EMPLOYEE ID
+                    </th>
+                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                      NAME
+                    </th>
+                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                      EMAIL
+                    </th>
+                    <th className="w-[30%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                      POSITION
+                    </th>
+                    <th className="w-[20%] px-4 py-3 text-center text-[#c1b6b6] text-sm font-semibold">
+                      ACTION
+                    </th>
+                  </tr>
+                </thead>
+
+                {/* Table Body */}
+                <tbody>
+                  {employees.map((emp) => {
+                    return (
+                      <tr id={emp.id} className="border-b border-b-[#dae0e8]">
+                        <td className="px-6 py-3 text-center">{emp.id}</td>
+                        <td className="px-6 py-3 text-center">{emp.name}</td>
+                        <td className="px-6 py-3 text-center">{emp.email}</td>
+                        <td className="px-6 py-3 text-center">
+                          {emp.position}
+                        </td>
+                        <td className="px-6 py-3 text-center">
+                          <div className="flex gap-2 justify-center">
+                            <span
+                              onClick={() => {
+                                setToggleBtn(true);
+                                setEditEmployee(emp);
+                              }}
+                              className=" cursor-pointer "
+                            >
+                              edit
+                            </span>
+                            <span
+                              onClick={() => handleDelete(emp.id)}
+                              className=" cursor-pointer "
+                            >
+                              delete
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -36,30 +96,3 @@ function EmployeeComponent() {
 }
 
 export default EmployeeComponent;
-
-/*<div
-            className={`flex justify-between p-4 border-b border-b-1 border-b-[#dae0e8] items-center  w-full h-15 `}
-          >
-            <span className="text-[#c1b6b6] text-sm font-semibold">
-              EMPLOYEE ID
-            </span>
-            <span className="text-[#c1b6b6] text-sm font-semibold">NAME</span>
-            <span className="text-[#c1b6b6] text-sm font-semibold">EMAIL</span>
-            <span className="text-[#c1b6b6] text-sm font-semibold">ACTION</span>
-          </div>
-          <div className={`flex flex-1 flex-col gap-2 bg-green-300`}>
-            <div className={`flex justify-between w-full p-4 h-15 bg-red-400`}>
-              <span className={`flex text-md items-center`}>1</span>
-              <span className={`flex text-md items-center`}>
-                Vedangi Thombare
-              </span>
-              <span className={`flex text-md items-center`}>
-                tvedangi@gmail.com
-              </span>
-              <span className={`flex flex-row gap-2`}>
-                <span class="material-symbols-outlined">edit</span>
-                <span class="material-symbols-outlined">delete</span>
-              </span>
-            </div>
-          </div>
-*/

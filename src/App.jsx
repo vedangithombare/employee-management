@@ -1,19 +1,44 @@
 import EmployeeComponent from "./components/EmployeeComponent";
 import EmployeeContext from "./components/Context/EmployeeContext";
 import AddEmployee from "./components/AddEmployee";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getEmployees } from "./components/apis/employeeApi";
 
 function App() {
-  const [employeeData, setEmployeeData] = useState({ name: "", email: "" });
+  const [employeeData, setEmployeeData] = useState({
+    name: "",
+    email: "",
+    position: "",
+  });
+  const [employees, setEmployees] = useState([]);
+  const [editEmployee, setEditEmployee] = useState({});
   const [toggleBtn, setToggleBtn] = useState(false);
 
   console.log("employeedata", employeeData);
   console.log("toggle button", toggleBtn);
 
+  // Fetching all the employee data
+  useEffect(() => {
+    getEmployees()
+      .then((res) => setEmployees(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  console.log("employeesss", employees);
+
   return (
     <>
       <EmployeeContext.Provider
-        value={{ employeeData, setEmployeeData, toggleBtn, setToggleBtn }}
+        value={{
+          employeeData,
+          setEmployeeData,
+          toggleBtn,
+          setToggleBtn,
+          employees,
+          setEmployees,
+          editEmployee,
+          setEditEmployee,
+        }}
       >
         <div
           className={`flex flex-col w-full h-full min-h-screen bg-green-400`}

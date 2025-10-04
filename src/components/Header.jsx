@@ -4,8 +4,6 @@ import { useContext } from "react";
 function Header() {
   const { toggleBtn, setToggleBtn } = useContext(EmployeeContext);
   
-  console.log("header",toggleBtn);
-
   return (
     <>
       <div

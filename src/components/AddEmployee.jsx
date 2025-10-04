@@ -1,17 +1,29 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import EmployeeContext from "./Context/EmployeeContext";
 import validateFormData from "./utils/formValidation";
+import { addEmployee, editEmployeeData } from "./apis/employeeApi";
 
 function AddEmployee() {
-  const { setEmployeeData, setToggleBtn, toggleBtn } =
-    useContext(EmployeeContext);
+  const {
+    setEmployees,
+    setToggleBtn,
+    toggleBtn,
+    editEmployee,
+    setEditEmployee,
+  } = useContext(EmployeeContext);
   const [employeeName, setEmployeeName] = useState("");
   const [employeeEmail, setEmployeeEmail] = useState("");
+  const [employeePosition, setEmployeePosition] = useState("");
   const [err, setErr] = useState({});
 
+  // Adding employee
   // Validate Employee form data
   const handleFormValidation = () => {
-    const errors = validateFormData(employeeName, employeeEmail);
+    const errors = validateFormData(
+      employeeName,
+      employeeEmail,
+      employeePosition
+    );
     if (Object.keys(errors).length !== 0) {
       setErr(errors);
       return false;
@@ -20,13 +32,9 @@ function AddEmployee() {
     return true;
   };
 
-  const handleSubmit = () => {
-    const isValid = handleFormValidation();
-    if (isValid) {
-      setEmployeeData({ name: employeeName, email: employeeEmail });
-      setEmployeeName("");
-      setEmployeeEmail("");
-    }
+  const handleAdd = async (employee) => {
+    const result = await addEmployee(employee);
+    setEmployees((prev) => [...prev, result.data]);
   };
 
   const handleOnChange = (setter, errorKey) => (e) => {
@@ -35,6 +43,45 @@ function AddEmployee() {
   };
   const handleToggleBtn = () => {
     setToggleBtn(!toggleBtn);
+  };
+
+
+  // Editing employee data
+  useEffect(() => {
+    if (editEmployee) {
+      setEmployeeName(editEmployee.name);
+      setEmployeeEmail(editEmployee.email);
+      setEmployeePosition(editEmployee.position);
+    }
+  }, [editEmployee]);
+
+  const handleSubmit = async () => {
+    const isValid = handleFormValidation();
+    if (!isValid) return;
+
+    if (editEmployee) {
+      const result = await editEmployeeData(editEmployee.id, {
+        name: employeeName,
+        email: employeeEmail,
+        position: employeePosition,
+      });
+
+      setEmployees((prev) =>
+        prev.map((e) => (e.id === editEmployee.id ? result.data : e))
+      );
+      setEditEmployee(null);
+    } else {
+      await handleAdd({
+        name: employeeName,
+        email: employeeEmail,
+        position: employeePosition,
+      });
+    }
+
+    setEmployeeName("");
+    setEmployeeEmail("");
+    setEmployeePosition("");
+    setToggleBtn(false);
   };
 
   return (
@@ -52,6 +99,7 @@ function AddEmployee() {
               x
             </button>
 
+            {/* add Employee Form */}
             <form
               onSubmit={(e) => e.preventDefault()}
               className="flex flex-col gap-6"
@@ -101,8 +149,35 @@ function AddEmployee() {
                   required
                 />
               </div>
+
+              <div className="flex flex-col h-full w-full gap-1">
+                <label
+                  className="flex flex-col text-sm  flex-row items-center justify-between"
+                  htmlFor="name"
+                >
+                  POSITION
+                  {err.positionError && (
+                    <div className="flex text-red-500 font-bold px-6 py-2 w-fit  flex-row">
+                      {err.positionError}
+                    </div>
+                  )}
+                </label>
+                <input
+                  value={employeePosition}
+                  className="border-[1px] solid border-[#cecccc] p-[0.6rem] rounded-sm outline-none"
+                  onChange={handleOnChange(
+                    setEmployeePosition,
+                    "positionError"
+                  )}
+                  type="text"
+                  name="position"
+                  placeholder="e.g. SDE"
+                  required
+                />
+              </div>
             </form>
 
+            {/* Submit button */}
             <button
               onClick={handleSubmit}
               className="self-end py-4 px-8 rounded-md text-white font-semibold cursor-pointer bg-blue-400"
